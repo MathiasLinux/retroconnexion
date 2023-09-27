@@ -49,13 +49,15 @@ class RetroConnexion extends Module
 
         $this->displayName = $this->l('Retro Rococo Connexion');
         $this->description = $this->l('Retro Rococo Connexion let you connect your NodeJS app to Prestashop');
+        $this->image = __PS_BASE_URI__ . 'modules/retroconnexion/views/img/logo.png';
 
         // Define hooks
-        $this->registerHook('actionCustomerAccountAdd');
+        $this->registerHook('retrieveUserInfos');
+        /*$this->registerHook('actionCustomerAccountAdd');
         $this->registerHook('actionAuthentication');
         $this->registerHook('displayCustomerAccountForm');
         $this->registerHook('actionAfterEmployeeLoginFormSubmit');
-        $this->registerHook('displayBackOfficeHeader');
+        $this->registerHook('displayBackOfficeHeader');*/
 
         $this->confirmUninstall = $this->l('You\'re sure that you wan\'t to delete this awesome');
 
@@ -143,6 +145,20 @@ class RetroConnexion extends Module
     {
         $this->context->controller->addJS($this->_path . '/views/js/front.js');
         $this->context->controller->addCSS($this->_path . '/views/css/front.css');
+    }
+
+    public function hookretrieveUserInfos()
+
+    {
+        /*$context = Context::getContext();
+        if ($context->customer->isLogged()) {
+            // Access customer data here
+            $customer = $context->customer;
+        } else {
+            // Customer is not logged in
+            $customer = "not logged in";
+        }
+        return (var_export($context, true));*/
     }
 
     /**
