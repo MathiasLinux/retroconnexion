@@ -22,45 +22,43 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<div class="panel">
-    <div class="row moduleconfig-header">
-        <div class="col-xs-5 text-right">
-            <img src="{$module_dir|escape:'html':'UTF-8'}views/img/logo.jpg"/>
+{block name='moduleconfig'}
+    <div class="panel">
+        <div class="row moduleconfig-header">
+            <div class="col-xs-5 text-right">
+                <img src="{$module_dir|escape:'html':'UTF-8'}views/img/logo.png"/>
+            </div>
+            <div class="col-xs-7 text-left">
+                <h2>{l s='Retro Connexion' mod='retroconnexion'}</h2>
+                <h4>{l s='Connect your Node JS Chat !' mod='retroconnexion'}</h4>
+            </div>
         </div>
-        <div class="col-xs-7 text-left">
-            <h2>{l s='Lorem' mod='retroconnexion'}</h2>
-            <h4>{l s='Lorem ipsum dolor' mod='retroconnexion'}</h4>
-        </div>
-    </div>
 
-    <hr/>
+        <hr/>
 
-    <div class="moduleconfig-content">
-        <div class="row">
-            <div class="col-xs-12">
-                <p>
-                    {hook h='retrieveUserInfos'}
-                <h4>{l s='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor' mod='retroconnexion'}</h4>
-                <ul class="ul-spaced">
-                    <li><strong>{l s='Lorem ipsum dolor sit amet' mod='retroconnexion'}</strong></li>
-                    <li>{l s='Lorem ipsum dolor sit amet' mod='retroconnexion'}</li>
-                    <li>{l s='Lorem ipsum dolor sit amet' mod='retroconnexion'}</li>
-                    <li>{l s='Lorem ipsum dolor sit amet' mod='retroconnexion'}</li>
-                    <li>{l s='Lorem ipsum dolor sit amet' mod='retroconnexion'}</li>
-                </ul>
-                </p>
+        <div class="moduleconfig-content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>{l s='Configure your key here' mod='retroconnexion'}</h4>
+                    <form method="post"
+                          action="{$action}">
+                        <div class="form-group">
+                            <label for="key">Key</label>
+                            <div class="keyInputLinux">
+                                <input type="text" id="key" value="{$secretKey|escape:'html':'UTF-8'}" name="key"
+                                       class="form-control"
+                                       placeholder="Key"/>https://soundcloud.com/leonekmi/ikea-njut-earrape
+                                <button class="btn btn-primary" id="generateKey" type="button">Generate a Key</button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" name="submit">Save</button>
+                    </form>
 
-                <br/>
-
-                <p class="text-center">
-                    <strong>
-                        <a href="http://www.prestashop.com" target="_blank" title="Lorem ipsum dolor">
-                            {l s='Lorem ipsum dolor' mod='retroconnexion' }
-                        </a>
-                    </strong>
-                </p>
+                    <br/>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    {*    Get the script in the assets/js folder*}
+    <script src="{$module_dir|escape:'html':'UTF-8'}views/js/configure.js"></script>
+{/block }

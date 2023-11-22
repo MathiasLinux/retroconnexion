@@ -39,6 +39,7 @@ class RetroConnexion extends Module
         $this->version = '1.0.0';
         $this->author = 'Mathias KLIEM';
         $this->need_instance = 0;
+        $this->key = "";
 
         /**
          * Set $this->bootstrap to true if your module is compliant with bootstrap (PrestaShop 1.6)
@@ -52,7 +53,7 @@ class RetroConnexion extends Module
         $this->image = __PS_BASE_URI__ . 'modules/retroconnexion/views/img/logo.png';
 
         // Define hooks
-        $this->registerHook('retrieveUserInfos');
+        //$this->registerHook('generateSecureKey');
         /*$this->registerHook('actionCustomerAccountAdd');
         $this->registerHook('actionAuthentication');
         $this->registerHook('displayCustomerAccountForm');
@@ -74,7 +75,10 @@ class RetroConnexion extends Module
 
         return parent::install() &&
             $this->registerHook('header') &&
-            $this->registerHook('displayBackOfficeHeader');
+            $this->registerHook('displayBackOfficeHeader') &&
+            $this->registerHook('actionAuthentication') &&
+            $this->registerHook('actionAdminLoginControllerLoginAfter') &&
+            $this->registerHook('actionCustomerAccountAdd');
     }
 
     public function uninstall()
@@ -89,10 +93,26 @@ class RetroConnexion extends Module
      */
     public function getContent()
     {
+        $this->handleFormSubmission();
         /**
          * If values have been submitted in the form, process.
          */
-        if (((bool)Tools::isSubmit('submitRetroConnexionModule')) == true) {
+
+        $secretKey = Configuration::get('RETRO_CONNEXION_SECRET_KEY');
+
+        $this->context->smarty->assign('secretKey', $secretKey);
+
+        $this->context->smarty->assign('module_dir', $this->_path);
+
+        $action = $this->context->link->getAdminLink('AdminModules', true, [], ['configure' => $this->name]);
+
+        $this->context->smarty->assign('action', $action);
+
+        $output = $this->context->smarty->fetch($this->local_path . 'views/templates/admin/configure.tpl');
+
+        return $output;
+
+        /*if (((bool)Tools::isSubmit('submitRetroConnexionModule')) == true) {
             $this->postProcess();
         }
 
@@ -100,8 +120,114 @@ class RetroConnexion extends Module
 
         $output = $this->context->smarty->fetch($this->local_path . 'views/templates/admin/configure.tpl');
 
-        return $output;
+        return $output;*/
     }
+
+    public function handleFormSubmission()
+    {
+        if (Tools::isSubmit('submit')) {
+            $this->saveSecretKeyToDatabase();
+        }
+    }
+
+    public function saveSecretKeyToDatabase()
+    {
+        // Get the secret key from the form
+        $this->secretKey = Tools::getValue('key');
+        if (empty($this->secretKey)) {
+            return;
+        }
+        Configuration::updateValue('RETRO_CONNEXION_SECRET_KEY', $this->secretKey);
+    }
+
+    /**
+     * Add the CSS & JavaScript files you want to be loaded in the BO.
+     */
+    public function hookDisplayBackOfficeHeader()
+    {
+        if (Tools::getValue('configure') == $this->name) {
+            $this->context->controller->addJS($this->_path . 'views/js/back.js');
+            $this->context->controller->addCSS($this->_path . 'views/css/back.css');
+        }
+    }
+
+//    public function hookretrieveUserInfos()
+//
+//    {
+//        /*$context = Context::getContext();
+//        if ($context->customer->isLogged()) {
+//            // Access customer data here
+//            $customer = $context->customer;
+//        } else {
+//            // Customer is not logged in
+//            $customer = "not logged in";
+//        }
+//        return (var_export($context, true));*/
+//    }
+
+    /**
+     * Add the CSS & JavaScript files you want to be added on the FO.
+     */
+    public function hookHeader()
+    {
+        $this->context->controller->addJS($this->_path . '/views/js/front.js');
+        $this->context->controller->addCSS($this->_path . '/views/css/front.css');
+    }
+
+    public function hookActionAuthentication()
+    {
+        // Context
+        $this->context = Context::getContext();
+        if ($this->context->customer !== null) {
+            // Encode the customer ID in a hash with a secret key to be stored in a cookie and decrypted later with a nodejs app
+            $secret = Configuration::get('RETRO_CONNEXION_SECRET_KEY');
+            $userId = $this->context->customer->id;
+            $userFirstName = $this->context->customer->firstname;
+            $hmac = hash_hmac('sha512', $userId, $secret);
+            setcookie('id_customer', $userId . '|' . $userFirstName . '|' . $hmac);
+        }
+    }
+
+    public function hookActionCustomerAccountAdd()
+    {
+        // Context
+        $this->context = Context::getContext();
+        if ($this->context->customer !== null) {
+            // Encode the customer ID in a hash with a secret key to be stored in a cookie and decrypted later with a nodejs app
+            $secret = Configuration::get('RETRO_CONNEXION_SECRET_KEY');
+            $userId = $this->context->customer->id;
+            $userFirstName = $this->context->customer->firstname;
+            $hmac = hash_hmac('sha512', $userId, $secret);
+            setcookie('id_customer', $userId . '|' . $userFirstName . '|' . $hmac);
+        }
+    }
+
+    public function hookActionAdminLoginControllerLoginAfter()
+    {
+        // Context
+        $this->context = Context::getContext();
+        if ($this->context->employee !== null) {
+            // Encode the customer ID in a hash with a secret key to be stored in a cookie and decrypted later with a nodejs app
+            $secret = Configuration::get('RETRO_CONNEXION_SECRET_KEY');
+            $userId = $this->context->employee->id;
+            $userFirstName = $this->context->employee->firstname;
+            $hmac = hash_hmac('sha512', $userId, $secret);
+            setcookie('id_employee', $userId . '|' . $userFirstName . '|' . $hmac);
+        }
+    }
+
+
+    /*public function hookActionGenerateSecureKey()
+    {
+        // Generate a new random key with a sha512 hash
+        $algorithm = 'sha512';
+        // Generate a random string.
+        $data = openssl_random_pseudo_bytes(32);
+        //var_dump($data);
+        //die();
+        // Generate a hash using the sha512 algorithm.
+        return hash_hmac($algorithm, $data, $this->key);
+    }*/
 
     /**
      * Save form data.
@@ -125,40 +251,6 @@ class RetroConnexion extends Module
             'RETROCONNEXION_ACCOUNT_EMAIL' => Configuration::get('RETROCONNEXION_ACCOUNT_EMAIL', 'contact@prestashop.com'),
             'RETROCONNEXION_ACCOUNT_PASSWORD' => Configuration::get('RETROCONNEXION_ACCOUNT_PASSWORD', null),
         );
-    }
-
-    /**
-     * Add the CSS & JavaScript files you want to be loaded in the BO.
-     */
-    public function hookDisplayBackOfficeHeader()
-    {
-        if (Tools::getValue('configure') == $this->name) {
-            $this->context->controller->addJS($this->_path . 'views/js/back.js');
-            $this->context->controller->addCSS($this->_path . 'views/css/back.css');
-        }
-    }
-
-    /**
-     * Add the CSS & JavaScript files you want to be added on the FO.
-     */
-    public function hookHeader()
-    {
-        $this->context->controller->addJS($this->_path . '/views/js/front.js');
-        $this->context->controller->addCSS($this->_path . '/views/css/front.css');
-    }
-
-    public function hookretrieveUserInfos()
-
-    {
-        /*$context = Context::getContext();
-        if ($context->customer->isLogged()) {
-            // Access customer data here
-            $customer = $context->customer;
-        } else {
-            // Customer is not logged in
-            $customer = "not logged in";
-        }
-        return (var_export($context, true));*/
     }
 
     /**
