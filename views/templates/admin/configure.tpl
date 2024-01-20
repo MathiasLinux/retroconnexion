@@ -47,7 +47,7 @@
                             <div class="keyInputLinux">
                                 <input type="text" id="key" value="{$secretKey|escape:'html':'UTF-8'}" name="key"
                                        class="form-control"
-                                       placeholder="Key"/>https://soundcloud.com/leonekmi/ikea-njut-earrape
+                                       placeholder="Key"/>
                                 <button class="btn btn-primary" id="generateKey" type="button">Generate a Key</button>
                             </div>
                         </div>

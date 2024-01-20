@@ -48,8 +48,8 @@ class RetroConnexion extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Retro Rococo Connexion');
-        $this->description = $this->l('Retro Rococo Connexion let you connect your NodeJS app to Prestashop');
+        $this->displayName = $this->trans('Retro Rococo Connexion', array(), 'Modules.Retroconnexion.Admin');
+        $this->description = $this->trans('This module allows you to connect to your Prestashop backoffice from a nodejs app.', array(), 'Modules.Retroconnexion.Admin');
         $this->image = __PS_BASE_URI__ . 'modules/retroconnexion/views/img/logo.png';
 
         // Define hooks
@@ -100,7 +100,11 @@ class RetroConnexion extends Module
 
         $secretKey = Configuration::get('RETRO_CONNEXION_SECRET_KEY');
 
-        $this->context->smarty->assign('secretKey', $secretKey);
+        if (!empty($secretKey)) {
+            $this->context->smarty->assign('secretKey', $secretKey);
+        } else {
+            $this->context->smarty->assign('secretKey', "");
+        }
 
         $this->context->smarty->assign('module_dir', $this->_path);
 
