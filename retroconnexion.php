@@ -188,7 +188,7 @@ class RetroConnexion extends Module
             $userId = $this->context->customer->id;
             $userFirstName = $this->context->customer->firstname;
             $hmac = hash_hmac('sha512', $userId, $secret);
-            setcookie('id_customer', $userId . '|' . $userFirstName . '|' . $hmac, time() + 60 * 60 * 24 * 30 * 12);
+            setcookie('id_customer', $userId . '|' . $userFirstName . '|' . $hmac . '|customer', time() + 60 * 60 * 24 * 30 * 12);
         }
     }
 
@@ -202,7 +202,7 @@ class RetroConnexion extends Module
             $userId = $this->context->customer->id;
             $userFirstName = $this->context->customer->firstname;
             $hmac = hash_hmac('sha512', $userId, $secret);
-            setcookie('id_customer', $userId . '|' . $userFirstName . '|' . $hmac);
+            setcookie('id_customer', $userId . '|' . $userFirstName . '|' . $hmac . '|customer', time() + 60 * 60 * 24 * 30 * 12);
         }
     }
 
@@ -216,7 +216,7 @@ class RetroConnexion extends Module
             $userId = $this->context->employee->id;
             $userFirstName = $this->context->employee->firstname;
             $hmac = hash_hmac('sha512', $userId, $secret);
-            setcookie('id_employee', $userId . '|' . $userFirstName . '|' . $hmac);
+            setcookie('id_employee', $userId . '|' . $userFirstName . '|' . $hmac . '|employee', time() + 60 * 60 * 24 * 30 * 12);
         }
     }
 
