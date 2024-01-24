@@ -188,7 +188,7 @@ class RetroConnexion extends Module
             $userId = $this->context->customer->id;
             $userFirstName = $this->context->customer->firstname;
             $hmac = hash_hmac('sha512', $userId, $secret);
-            setcookie('id_customer', $userId . '|' . $userFirstName . '|' . $hmac);
+            setcookie('id_customer', $userId . '|' . $userFirstName . '|' . $hmac, time() + 60 * 60 * 24 * 30 * 12);
         }
     }
 
