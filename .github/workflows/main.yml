@@ -17,7 +17,7 @@ jobs:
 
       - name: "Zipping"
         run: |
-          7z a -tzip ${{ github.workspace }}/retroconnexion.zip ${{ github.workspace }}/../retroconnexion/*
+          zip -r retroconnexion.zip ../retroconnexion
       - name: "Get date"
         id: "date"
         run: |
