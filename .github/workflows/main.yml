@@ -15,12 +15,12 @@ jobs:
       - name: "Get date"
         id: "date"
         run: |
-          echo "::set-output name=date::$(date +'%Y-%m-%d')"
+          echo "::set-output name=date::$(date +'%Y-%m-%d_%H:%M:%S')"
 
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
+          automatic_release_tag: "dev-${{ steps.date.outputs.date }}"
           prerelease: true
           title: "Development Build - ${{ steps.date.outputs.date }}"
