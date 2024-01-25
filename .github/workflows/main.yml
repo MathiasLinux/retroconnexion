@@ -15,9 +15,15 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
 
+      - name: "Prepare files"
+        run: |
+          mkdir ${{ github.workspace }}/retroconnexion
+          mv ${{ github.workspace }}/* ${{ github.workspace }}/retroconnexion/
+
       - name: "Zipping"
         run: |
-          zip -r retroconnexion.zip ../retroconnexion
+          zip -r ${{ github.workspace }}/retroconnexion.zip ${{ github.workspace }}/retroconnexion/*
+
       - name: "Get date"
         id: "date"
         run: |
