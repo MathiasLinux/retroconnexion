@@ -13,9 +13,11 @@ jobs:
 
     steps:
       - name: "Zipping files"
-        # We zip the entire directory so that we can release the Prestashop module except the .git, .github and .gitignore files and folders
+        # We zip the entire directory so that we can release the Prestashop module
         run: |
-          zip -r -q ../retroconnexion.zip .
+          apt update && apt install p7zip-full -y
+          7z a -tzip retroconnexion.zip ../retroconnexion
+
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
