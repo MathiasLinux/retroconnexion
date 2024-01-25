@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: "Zipping"
         run: |
-          7z a -tzip ${{ github.workspace }}/../retroconnexion.zip ${{ github.workspace }}/../
+          7z a -tzip ${{ github.workspace }}/retroconnexion.zip ${{ github.workspace }}/*
       - name: "Get date"
         id: "date"
         run: |
@@ -28,4 +28,4 @@ jobs:
           prerelease: true
           title: "Development Build - ${{ steps.date.outputs.date }}"
           files: |
-            ${{ github.workspace }}/../retroconnexion.zip
+            ${{ github.workspace }}/retroconnexion.zip
