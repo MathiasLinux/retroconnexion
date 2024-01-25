@@ -12,10 +12,10 @@ jobs:
     runs-on: "ubuntu-latest"
 
     steps:
-      - name: "Zipping files"
-        # We zip the entire directory so that we can release the Prestashop module
+      - name: "Get date"
+        id: "date"
         run: |
-          7z a -tzip retroconnexion.zip ../retroconnexion
+          echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
 
       - uses: "marvinpinto/action-automatic-releases@latest"
@@ -23,6 +23,4 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: true
-          title: "Development Build - $(date +'%Y-%m-%d %H:%M:%S')"
-          files: |
-            retroconnexion.zip
+          title: "Development Build - ${{ steps.date.outputs.date }}"
