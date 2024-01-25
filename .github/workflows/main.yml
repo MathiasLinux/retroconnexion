@@ -27,5 +27,5 @@ jobs:
           automatic_release_tag: "dev-${{ steps.date.outputs.date }}"
           prerelease: true
           title: "Development Build - ${{ steps.date.outputs.date }}"
-          files: |
-            retroconnexion.zip
+#          files: |
+#            retroconnexion.zip
