@@ -22,7 +22,8 @@ jobs:
 
       - name: "Zipping"
         run: |
-          sudo zip -r ${{ github.workspace }}/retroconnexion.zip /opt/retroconnexion/*
+          cd /opt
+          sudo zip -r ${{ github.workspace }}/retroconnexion.zip ./retroconnexion/*
 
       - name: "Get date"
         id: "date"
