@@ -17,12 +17,12 @@ jobs:
 
       - name: "Prepare files"
         run: |
-          mkdir ${{ github.workspace }}/retroconnexion
-          mv ${{ github.workspace }}/* ${{ github.workspace }}/retroconnexion/
+          sudo mkdir /opt/retroconnexion
+          sudo mv ${{ github.workspace }}/* /opt/retroconnexion
 
       - name: "Zipping"
         run: |
-          zip -r ${{ github.workspace }}/retroconnexion.zip ${{ github.workspace }}/retroconnexion/*
+          sudo zip -r ${{ github.workspace }}/retroconnexion.zip /opt/retroconnexion/*
 
       - name: "Get date"
         id: "date"
