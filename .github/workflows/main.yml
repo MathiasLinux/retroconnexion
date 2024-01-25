@@ -12,6 +12,9 @@ jobs:
     runs-on: "ubuntu-latest"
 
     steps:
+      - name: "Zipping"
+        run: |
+          sudo 7z a -tzip /opt/retroconnexion.zip .
       - name: "Get date"
         id: "date"
         run: |
@@ -24,3 +27,4 @@ jobs:
           automatic_release_tag: "dev-${{ steps.date.outputs.date }}"
           prerelease: true
           title: "Development Build - ${{ steps.date.outputs.date }}"
+          files: "/opt/retroconnexion.zip"
