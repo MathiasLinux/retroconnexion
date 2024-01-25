@@ -15,7 +15,7 @@ jobs:
       - name: "Zipping files"
         # We zip the entire directory so that we can release the Prestashop module except the .git, .github and .gitignore files and folders
         run: |
-          zip -r -q -x .git .github ../retroconnexion.zip .
+          zip -r -q ../retroconnexion.zip .
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
