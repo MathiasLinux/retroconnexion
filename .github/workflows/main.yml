@@ -1,0 +1,27 @@
+---
+name: "pre-release"
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  pre-release:
+    name: "Pre Release"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Zipping files"
+        # We zip the entire directory so that we can release the Prestashop module except the .git, .github and .gitignore files and folders
+        run: |
+          zip -r -q -x .git .github .gitignore ../retroconnexion.zip .
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build - $(date +'%Y-%m-%d %H:%M:%S')"
+          files: |
+            retroconnexion.zip
